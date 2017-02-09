@@ -1,4 +1,5 @@
 const { remote } = require('electron')
+const {Menu, MenuItem} = remote
 const path = require('path')
 const csvsync = require('csvsync')
 const fs = require('fs')
@@ -12,11 +13,42 @@ var userDataPath = app.getPath('videos');
 console.log('user path: ', userDataPath)
 var moment = require('moment')
 var content = document.getElementById("contentDiv")
+var picNum = document.getElementById("picNumID")
+var localMediaStream
 var sys = {
   modelID: 'unknown',
   isMacBook: false // need to detect if macbook for ffmpeg recording framerate value
 }
 lowLag.init(); // init audio functions
+
+
+//camera preview on
+function startWebCamPreview() {
+  clearScreen()
+  var vidPrevEl = document.createElement("video")
+  vidPrevEl.autoplay = true
+  vidPrevEl.id = "webcampreview"
+  content.appendChild(vidPrevEl)
+  navigator.webkitGetUserMedia({video: true, audio: false},
+    function(stream) {
+      localMediaStream = stream
+      vidPrevEl.src = URL.createObjectURL(stream)
+    },
+    function() {
+      alert('Could not connect to webcam')
+    }
+  )
+}
+
+
+// camera preview off
+function stopWebCamPreview () {
+  if(typeof localMediaStream !== "undefined")
+  {
+    localMediaStream.getVideoTracks()[0].stop()
+    clearScreen()
+  }
+}
 
 
 // get date and time for appending to filenames
@@ -183,7 +215,11 @@ function clearScreen() {
   content.removeChild(content.lastChild)
 }
 
+
+// construct a new ffmpeg recording object
 var rec = new ff()
+
+
 // show text instructions on screen
 function showInstructions(txt) {
   clearScreen()
@@ -276,27 +312,6 @@ function waitThenDoAsync (ms, doneWaitingCallback, arg) {
 }
 
 
-// load video from filename
-function loadVideo() {
-  clearScreen()
-  var video = document.createElement('video')
-  var source = document.createElement('source')
-  source.type = "video/mp4"
-  source.src = "./experiments/phon/assets/video/airplane264.mp4"
-  source.id = "videoSrc"
-  video.autoPlay = false
-  video.id = 'videoElement'
-  video.appendChild(source)
-  content.appendChild(video)
-  video.oncanplay = function () {
-    video.play()
-  }
-  video.onended = function () {
-    clearScreen()
-  }
-}
-
-
  // keys object for storing keypress information
 var keys = {
   key : '',
@@ -348,130 +363,6 @@ function experiment(name) {
   }
 }
 
-
-// video stimulus object for storing info about presentation
-var videoStim = {
-  beginTime: 0, //set with performance.now()
-  stimType: '', // img, vid, txt, aud
-  endTime: 0, // set with performance.now()
-  duration: 0,
-  file: 'empty',
-  name: 'empty',
-  ext: '.empty',
-  //dir: path.join(experiment.getMediaPath(),'/pics'),
-  getDuration: function () {
-    return this.endTime - this.beginTime
-  },
-  setBeginTime: function() {
-    this.beginTime = performance.now()
-  },
-  setEndTime: function() {
-    this.endTime = performance.now()
-  },
-  setFile: function () {
-    this.file = path.format({
-      dir: this.dir,
-      name: this.name,
-      ext: this.ext
-    })
-  }
-}
-
-
-// image stimulus object for storing info about presentation
-var imageStim = {
-  imageEl: document.getElementById("imageElement"),
-  beginTime: 0, //set with performance.now()
-  stimType: '', // img, vid, txt, aud
-  endTime: 0, // set with performance.now()
-  duration: 0,
-  file: 'empty',
-  name: 'empty',
-  ext: '.empty',
-  //dir: path.join(experiment.getMediaPath(),'/pics'),
-  getDuration: function () {
-    return this.endTime - this.beginTime
-  },
-  setBeginTime: function() {
-    this.beginTime = performance.now()
-  },
-  setEndTime: function() {
-    this.endTime = performance.now()
-  },
-  setSource: function () {
-    this.imageEl.src = this.file
-  },
-  setFile: function () {
-    this.file = path.format({
-      dir: this.dir,
-      name: this.name,
-      ext: this.ext
-    })
-  }
-}
-
-// audio stimulus object for storing info about presentation
-var audioStim = {
-  beginTime: 0, //set with performance.now()
-  stimType: '', // img, vid, txt, aud
-  endTime: 0, // set with performance.now()
-  duration: 0,
-  file: 'empty',
-  name: 'empty',
-  ext: '.empty',
-  //dir: path.join(experiment.getMediaPath(),'/pics'),
-  getDuration: function () {
-    return this.endTime - this.beginTime
-  },
-  setBeginTime: function() {
-    this.beginTime = performance.now()
-  },
-  setEndTime: function() {
-    this.endTime = performance.now()
-  },
-  setFile: function () {
-    this.file = path.format({
-      dir: this.dir,
-      name: this.name,
-      ext: this.ext
-    })
-  }
-}
-
-
-// default video recording properties stored in the object
-var videoRecObj = {
-  dir: '',
-  name: '',
-  ext: '.mp4',
-  vCodec: 'libx264',
-  aCodec: '',
-  saveName: '',
-  setSaveName: function () {
-    this.saveName = path.format(({
-      dir: this.dir,
-      name: this.name,
-      ext: this.ext
-    }))
-  }
-}
-
-
-// default audio recording properties stored in the object
-var audioRecObj = {
-  dir: '',
-  name: '',
-  ext: '.wav',
-  aCodec: '',
-  saveName: '',
-  setSaveName: function () {
-    this.saveName = path.format(({
-      dir: this.dir,
-      name: this.name,
-      ext: this.ext
-    }))
-  }
-}
 
 
 // update keys object when a keydown event is detected
@@ -553,6 +444,7 @@ function getStarted() {
     alert('Participant field is blank!')
   } else {
     console.log ('subject is: ', subjID)
+    stopWebCamPreview()
     closeNav()
     showInstructions(instructions)
   }

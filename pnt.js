@@ -8,19 +8,22 @@ exp.getMediaPath()
 stimfile = path.resolve(exp.mediapath, 'stim.csv')
 console.log(stimfile)
 trials = readCSV(stimfile)
+//Number(picNum.value)
 maxTrials = trials.length
 var t = -1
+showNextTrial()
 
 
 function showNextTrial() {
   closeNav()
+  clearScreen()
   t += 1
   if (t > maxTrials) {
     clearScreen()
     t = maxTrials+1
     return false
   }
-  clearScreen()
+  picNum.value = t
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
   playAudio(path.join(exp.mediapath, 'beep.wav'))
@@ -35,6 +38,7 @@ function showPreviousTrial() {
   if (t < 0) {
     t=0
   }
+  picNum.value = t
   clearScreen()
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')

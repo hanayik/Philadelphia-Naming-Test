@@ -1,10 +1,11 @@
 const electron = require('electron')
+const Menu = electron.Menu
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 const dialog = electron.dialog //for OS specific dialog windows
-const si = require('systeminformation');
+const si = require('systeminformation')
 const ff = require('./camera/ffmpeg')
 const appRootDir = require('app-root-dir').get() //get the path of the application bundle
 const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
@@ -26,7 +27,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
