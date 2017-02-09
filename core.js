@@ -19,7 +19,23 @@ var sys = {
   modelID: 'unknown',
   isMacBook: false // need to detect if macbook for ffmpeg recording framerate value
 }
+var instructions = 'PNT instructions!'
+var beepSound = path.join(__dirname, 'assets', 'beep.wav')
+var exp = new experiment('pnt')
+exp.getRootPath()
+exp.getMediaPath()
+var stimfile = path.resolve(exp.mediapath, 'stim.csv')
+//console.log(stimfile)
+var trials = readCSV(stimfile)
+var maxTrials = trials.length
+var t = -1
 lowLag.init(); // init audio functions
+
+
+
+
+
+
 
 
 //camera preview on
@@ -431,7 +447,7 @@ function checkForEscape() {
     console.log("Escape was pressed")
     openNav()
     nav.hidden = false
-    unloadJS(exp.name)
+    // unloadJS(exp.name)
     clearScreen()
     rec.stopRec()
   }
@@ -448,6 +464,40 @@ function getStarted() {
     closeNav()
     showInstructions(instructions)
   }
+}
+
+
+function showNextTrial() {
+  closeNav()
+  clearScreen()
+  t += 1
+  if (t > maxTrials) {
+    clearScreen()
+    t = maxTrials+1
+    return false
+  }
+  picNum.value = t
+  var img = document.createElement("img")
+  img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
+  playAudio(path.join(exp.mediapath, 'beep.wav'))
+  content.appendChild(img)
+  return getTime()
+}
+
+
+function showPreviousTrial() {
+  closeNav()
+  t -= 1
+  if (t < 0) {
+    t=0
+  }
+  picNum.value = t
+  clearScreen()
+  var img = document.createElement("img")
+  img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
+  playAudio(path.join(exp.mediapath, 'beep.wav'))
+  content.appendChild(img)
+  return getTime()
 }
 
 
