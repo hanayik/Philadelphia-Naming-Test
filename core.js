@@ -504,8 +504,8 @@ function showPreviousTrial() {
 
 
 // event listeners that are active for the life of the application
-document.addEventListener('keydown', checkForEscape)
-document.addEventListener('keydown', updateKeys)
+document.addEventListener('keyup', checkForEscape)
+document.addEventListener('keyup', updateKeys)
 // document.getElementById("videoElement").style.visibility = "hidden"
 // document.getElementById("textElement").style.visibility = "hidden"
 // document.getElementById("audioElement").style.visibility = "hidden"
