@@ -1,4 +1,4 @@
-const { remote } = require('electron')
+const { remote, shell } = require('electron')
 const {Menu, MenuItem} = remote
 const path = require('path')
 const csvsync = require('csvsync')
@@ -19,15 +19,17 @@ var sys = {
   modelID: 'unknown',
   isMacBook: false // need to detect if macbook for ffmpeg recording framerate value
 }
-var instructions = 'PNT instructions!'
+var instructions = "I'm going to ask you to name some pictures. When you hear a beep, a picture will appear on the computer screen. Your job is to name the picture using only one word. We'll practice several pictures before we begin"
 var beepSound = path.join(__dirname, 'assets', 'beep.wav')
 var exp = new experiment('pnt')
+var timeoutTime = 30 // in seconds
 exp.getRootPath()
 exp.getMediaPath()
 var stimfile = path.resolve(exp.mediapath, 'stim.csv')
 //console.log(stimfile)
 var trials = readCSV(stimfile)
 var maxTrials = trials.length
+var trialTimeoutID
 var t = -1
 lowLag.init(); // init audio functions
 
@@ -194,6 +196,16 @@ function ff() {
 }
 
 
+// open data folder in finder
+function openDataFolder() {
+  dataFolder = path.join(app.getPath('userData'), 'video')
+  if (!fs.existsSync(dataFolder)) {
+    fs.mkdirSync(dataFolder)
+  }
+  shell.showItemInFolder(dataFolder)
+}
+
+
 // play audio file using lowLag API
 function playAudio(fileToPlay) {
   lowLag.load(fileToPlay);
@@ -241,6 +253,7 @@ function showInstructions(txt) {
   clearScreen()
   rec.startRec()
   var textDiv = document.createElement("div")
+  textDiv.style.textAlign = 'center'
   var p = document.createElement("p")
   var txtNode = document.createTextNode(txt)
   p.appendChild(txtNode)
@@ -450,16 +463,19 @@ function checkForEscape() {
     // unloadJS(exp.name)
     clearScreen()
     rec.stopRec()
+    clearTimeout(trialTimeoutID)
   }
 }
 
 function getStarted() {
   var subjID = document.getElementById("subjID").value
-  if (subjID === '') {
-    console.log ('subject is blank')
-    alert('Participant field is blank!')
+  var sessID = document.getElementById("sessID").value
+  if (subjID === '' || sessID === '') {
+    console.log ('subject and/or session is blank')
+    alert('Participant field or session field is blank!')
   } else {
     console.log ('subject is: ', subjID)
+    console.log('session is: ', sessID)
     stopWebCamPreview()
     closeNav()
     showInstructions(instructions)
@@ -468,6 +484,7 @@ function getStarted() {
 
 
 function showNextTrial() {
+  clearTimeout(trialTimeoutID)
   closeNav()
   clearScreen()
   t += 1
@@ -481,11 +498,13 @@ function showNextTrial() {
   img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
   playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
+  trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
 }
 
 
 function showPreviousTrial() {
+  clearTimeout(trialTimeoutID)
   closeNav()
   t -= 1
   if (t < 0) {
@@ -497,6 +516,7 @@ function showPreviousTrial() {
   img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
   playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
+  trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
 }
 
