@@ -22,6 +22,8 @@ var sys = {
 var instructions = "I'm going to ask you to name some pictures. When you hear a beep, a picture will appear on the computer screen. Your job is to name the picture using only one word. We'll practice several pictures before we begin"
 var beepSound = path.join(__dirname, 'assets', 'beep.wav')
 var exp = new experiment('pnt')
+// construct a new ffmpeg recording object
+var rec = new ff()
 var timeoutTime = 30 // in seconds
 exp.getRootPath()
 exp.getMediaPath()
@@ -30,7 +32,8 @@ var stimfile = path.resolve(exp.mediapath, 'stim.csv')
 var trials = readCSV(stimfile)
 var maxTrials = trials.length
 var trialTimeoutID
-var t = -1
+var t = Number(picNum.value)-1
+var tReal = t-1
 lowLag.init(); // init audio functions
 
 
@@ -243,9 +246,6 @@ function clearScreen() {
   content.removeChild(content.lastChild)
 }
 
-
-// construct a new ffmpeg recording object
-var rec = new ff()
 
 
 // show text instructions on screen
@@ -477,25 +477,34 @@ function getStarted() {
     console.log ('subject is: ', subjID)
     console.log('session is: ', sessID)
     stopWebCamPreview()
-    closeNav()
-    showInstructions(instructions)
+    t = Number(picNum.value)-1
+    tReal = t-1
+    if (Number(picNum.value) > maxTrials+1) {
+      alert("Invalid picture number " + picNum.value )
+    } else {
+      closeNav()
+      showInstructions(instructions)
+    }
   }
 }
+
+
 
 
 function showNextTrial() {
   clearTimeout(trialTimeoutID)
   closeNav()
   clearScreen()
-  t += 1
-  if (t > maxTrials) {
+  t = t += 1
+  tReal = t-1
+  picNum.value = t
+  if (tReal >= maxTrials) {
     clearScreen()
-    t = maxTrials+1
+    rec.stopRec()
     return false
   }
-  picNum.value = t
   var img = document.createElement("img")
-  img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
+  img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
   playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
@@ -506,14 +515,16 @@ function showNextTrial() {
 function showPreviousTrial() {
   clearTimeout(trialTimeoutID)
   closeNav()
-  t -= 1
-  if (t < 0) {
-    t=0
-  }
-  picNum.value = t
   clearScreen()
+  t -= 1
+  tReal = t-1
+  picNum.value = t
+  if (tReal < 0) {
+    t=1
+    tReal = t-1
+  }
   var img = document.createElement("img")
-  img.src = path.join(exp.mediapath, 'pics', trials[t].PictureName.trim() + '.png')
+  img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
   playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
