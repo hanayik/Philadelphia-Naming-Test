@@ -10,6 +10,7 @@ const ff = require('./camera/ffmpeg')
 const appRootDir = require('app-root-dir').get() //get the path of the application bundle
 const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
 const exec = require( 'child_process' ).exec
+//icon credit: http://www.flaticon.com/authors/madebyoliver
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
