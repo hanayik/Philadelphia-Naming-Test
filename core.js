@@ -116,7 +116,7 @@ function ff() {
   this.screenDeviceID = '1',           // macOS only
   this.videoSize = '1280x720',         // output video dimensions
   this.videoCodec = 'libx264',         // encoding codec
-  this.recQuality = '30',              //0-60 (0 = perfect quality but HUGE files)
+  this.recQuality = '20',              //0-60 (0 = perfect quality but HUGE files)
   this.preset = 'ultrafast',
   this.videoExt = '.mp4',
   // filter is for picture in picture effect
