@@ -5,6 +5,7 @@ const csvsync = require('csvsync')
 const fs = require('fs')
 const $ = require('jQuery')
 const {app} = require('electron').remote;
+app.setName('PNT')
 const appRootDir = require('app-root-dir').get() //get the path of the application bundle
 const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
 const exec = require( 'child_process' ).exec
@@ -150,7 +151,7 @@ function ff() {
     return outpath
   }
   this.outputFilename = function() {
-    return path.join(this.makeOutputFolder(), this.getSubjID()+'_'+this.getSessID()+'_'+getDateStamp()+this.videoExt)
+    return path.join(this.makeOutputFolder(), this.getSubjID()+'_'+this.getSessID()+'_'+app.getName()+'_'+getDateStamp()+this.videoExt)
   },
   this.getFramerate = function () {
     if (sys.isMacBook == true){
