@@ -12,33 +12,7 @@ const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
 const exec = require( 'child_process' ).exec
 const system = require('system-control')();
 const notifier = require('electron-notifications')
-const GhReleases = require('electron-gh-releases')
 app.setName("PNT")
-let options = {
-  repo: 'hanayik/Philadelphia-Naming-Test',
-  currentVersion: app.getVersion()
-}
-console.log("current version: ", options.currentVersion)
-const updater = new GhReleases(options)
-// Check for updates
-// `status` returns true if there is a new update available
-updater.check((err, status) => {
-  console.log(status)
-  if (!err && status) {
-    // Download the update
-    updater.download()
-    dialog.showMessageBox({type: "none", message: "downloading update"})
-  }
-})
-
-// When an update has been downloaded
-updater.on('update-downloaded', (info) => {
-  // Restart the app and install the update
-  updater.install()
-})
-
-// Access electrons autoUpdater
-updater.autoUpdater
 //icon credit: http://www.flaticon.com/authors/madebyoliver
 
 // Keep a global reference of the window object, if you don't, the window will
