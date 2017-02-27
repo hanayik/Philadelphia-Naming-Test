@@ -12,7 +12,30 @@ const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
 const exec = require( 'child_process' ).exec
 const system = require('system-control')();
 const notifier = require('electron-notifications')
+const GhReleases = require('electron-gh-releases')
 app.setName("PNT")
+let options = {
+  repo: 'hanayik/Philadelphia-Naming-Test',
+  currentVersion: app.getVersion()
+}
+const updater = new GhReleases(options)
+// Check for updates
+// `status` returns true if there is a new update available
+updater.check((err, status) => {
+  if (!err && status) {
+    // Download the update
+    updater.download()
+  }
+})
+
+// When an update has been downloaded
+updater.on('update-downloaded', (info) => {
+  // Restart the app and install the update
+  updater.install()
+})
+
+// Access electrons autoUpdater
+updater.autoUpdater
 //icon credit: http://www.flaticon.com/authors/madebyoliver
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -57,7 +80,8 @@ function createWindow () {
         const notification = notifier.notify(app.getName(), {
           message: "Your screen is dim.",
           buttons: ['Illuminate', 'Cancel'],
-          duration: 20000
+          duration: 20000,
+          icon: path.join(__dirname, 'icon.png')
         })
         notification.on('buttonClicked', (text) => {
           console.log(text)
