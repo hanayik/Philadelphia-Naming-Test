@@ -18,13 +18,16 @@ let options = {
   repo: 'hanayik/Philadelphia-Naming-Test',
   currentVersion: app.getVersion()
 }
+console.log("current version: ", options.currentVersion)
 const updater = new GhReleases(options)
 // Check for updates
 // `status` returns true if there is a new update available
 updater.check((err, status) => {
+  console.log(status)
   if (!err && status) {
     // Download the update
     updater.download()
+    dialog.showMessageBox({type: "none", message: "downloading update"})
   }
 })
 
