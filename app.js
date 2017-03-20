@@ -12,9 +12,12 @@ const ffmpeg = appRootDir+'/ffmpeg/ffmpeg'
 const exec = require( 'child_process' ).exec
 const system = require('system-control')();
 const notifier = require('electron-notifications')
+const autoUpdater = electron.autoUpdater
+const os = require("os");
+var platform = os.platform() + '_' + os.arch();
+var version = app.getVersion();
 app.setName("PNT")
 //icon credit: http://www.flaticon.com/authors/madebyoliver
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -30,6 +33,10 @@ function createWindow () {
     slashes: true
   }))
 
+  console.log('https://philadelphia-naming-test.herokuapp.com/'+'update/'+platform+'/'+version)
+  autoUpdater.setFeedURL('https://philadelphia-naming-test.herokuapp.com/'+'update/'+platform+'/'+version);
+  autoUpdater.checkForUpdates()
+
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
 
@@ -43,7 +50,6 @@ function createWindow () {
 
   function checkForMaxBrightness() {
     system.display.getBrightness().then(function(brightness) {
-      console.log(brightness)
       if (brightness < 1) {
         // dialog.showMessageBox({ type: 'info', buttons: ['Adjust brightness for me', 'Cancel'], message: "Your screen seems a bit dim, would you like to set it to it's maximum setting? It's best to have it as bright as possible." }, function (buttonIndex) {
         //   if (buttonIndex == 0) {
@@ -100,6 +106,22 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+autoUpdater.on('error', function(err) {
+  console.log(err)
+})
+autoUpdater.on('checking-for-update', function(){
+  console.log('checking for update')
+})
+autoUpdater.on('update-available', function(){
+  console.log('update available, downloading now')
+})
+autoUpdater.on('update-not-available', function(){
+  console.log('update not available')
+})
+autoUpdater.on('update-downloaded', function(){
+  console.log('update downloaded')
 })
 
 // In this file you can include the rest of your app's specific main process
