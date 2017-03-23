@@ -60,7 +60,7 @@ function createWindow () {
         // USE NOTIFICATIONS WHEN MY PR IS MERGED!
         //
         console.log('got here')
-        const notification = notifier.notify(app.getName(), {
+        const notification = notifier.notify('', {
           message: "Your screen is dim.",
           buttons: ['Illuminate', 'Cancel'],
           duration: 20000,
@@ -122,6 +122,22 @@ autoUpdater.on('update-not-available', function(){
 })
 autoUpdater.on('update-downloaded', function(){
   console.log('update downloaded')
+  const updateNotification = notifier.notify('', {
+    message: "Update available!",
+    buttons: ['Install', 'Cancel'],
+    duration: 20000,
+    icon: path.join(__dirname, 'icon.png')
+  })
+  updateNotification.on('buttonClicked', (text) => {
+    console.log(text)
+    if (text === 'Install') {
+      autoUpdater.quitAndInstall()
+    }
+    updateNotification.close()
+  })
+  updateNotification.on('clicked', () => {
+    updateNotification.close()
+  })
 })
 
 // In this file you can include the rest of your app's specific main process
