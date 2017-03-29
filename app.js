@@ -123,7 +123,7 @@ autoUpdater.on('update-not-available', function(){
 autoUpdater.on('update-downloaded', function(){
   console.log('update downloaded')
   const updateNotification = notifier.notify('', {
-    message: "Update available!",
+    message: "Update downloaded!",
     buttons: ['Install', 'Cancel'],
     duration: 20000,
     icon: path.join(__dirname, 'icon.png')

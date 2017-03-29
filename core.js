@@ -247,6 +247,10 @@ function clearScreen() {
   content.removeChild(content.lastChild)
 }
 
+function clearAllTimeouts() {
+  clearTimeout(trialTimeoutID)
+}
+
 
 
 // show text instructions on screen
@@ -496,12 +500,14 @@ function showNextTrial() {
   clearTimeout(trialTimeoutID)
   closeNav()
   clearScreen()
-  t = t += 1
+  t += 1
   tReal = t-1
   picNum.value = t
   if (tReal >= maxTrials) {
     clearScreen()
     rec.stopRec()
+    clearAllTimeouts()
+    openNav()
     return false
   }
   var img = document.createElement("img")
