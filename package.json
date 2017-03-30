@@ -42,7 +42,9 @@
     "csvsync": "^1.0.1",
     "electron-gh-releases": "^2.0.4",
     "electron-notifications": "^0.1.6",
+    "electron-settings": "^3.0.6",
     "jQuery": "^1.7.4",
+    "mkdirp": "^0.5.1",
     "moment": "^2.17.1",
     "system-control": "0.0.4",
     "systeminformation": "^3.16.0"
