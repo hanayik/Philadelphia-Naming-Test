@@ -169,7 +169,6 @@ function ff() {
   this.makeOutputFolder = function () {
     outpath = path.join(savePath, 'PolarData', app.getName(), getSubjID(), getSessID())
     console.log(outpath)
-    //fs.mkdirSync(path.join(app.getPath('userData'), 'video'))
     if (!fs.existsSync(outpath)) {
       mkdirp.sync(outpath)
     }
@@ -227,9 +226,9 @@ function ff() {
 
 // open data folder in finder
 function openDataFolder() {
-  dataFolder = path.join(app.getPath('userData'), 'video')
+  dataFolder = savePath
   if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder)
+    mkdirp.sync(dataFolder)
   }
   shell.showItemInFolder(dataFolder)
 }
