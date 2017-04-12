@@ -19,7 +19,7 @@ var sys = {
   modelID: 'unknown',
   isMacBook: false // need to detect if macbook for ffmpeg recording framerate value
 }
-var instructions = "I'm going to ask you to name some pictures. When you hear a beep, a picture will appear on the computer screen. Your job is to name the picture using only one word. We'll practice several pictures before we begin"
+var instructions = "I'm going to ask you to name some pictures. Each picture will appear on the computer screen. Your job is to name the picture using only one word. We'll practice several pictures before we begin"
 var beepSound = path.join(__dirname, 'assets', 'beep.wav')
 var exp = new experiment('pnt')
 // construct a new ffmpeg recording object
@@ -140,7 +140,7 @@ function ff() {
   this.audioDeviceID = '0',            // macOS only
   this.screenDeviceID = '1',           // macOS only
   this.videoSize = '1280x720',         // output video dimensions
-  this.videoCodec = 'libx264',         // encoding codec
+  this.videoCodec = 'libx264',         // encoding codec libx264
   this.recQuality = '20',              //0-60 (0 = perfect quality but HUGE files)
   this.preset = 'ultrafast',
   this.videoExt = '.mp4',
@@ -192,13 +192,14 @@ function ff() {
       ' -thread_queue_size ' + this.threadQueSize +
       ' -f ' + this.screenFormat +
       ' -framerate ' + this.getFramerate().toString() +
+      ' -async 1' +
       ' -i ' + '"' + this.screenDeviceID + '"' +
       ' -thread_queue_size ' + this.threadQueSize +
       ' -f ' + this.cameraFormat +
       ' -framerate ' + this.getFramerate().toString() +
       ' -video_size ' + this.videoSize +
       ' -i "' + this.cameraDeviceID + '":"' + this.audioDeviceID + '"' +
-      ' -profile:v baseline' +
+      //' -profile:v baseline' +
       ' -c:v ' + this.videoCodec +
       ' -crf ' + this.recQuality +
       ' -preset ultrafast' +
@@ -536,7 +537,7 @@ function showNextTrial() {
   }
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
-  playAudio(path.join(exp.mediapath, 'beep.wav'))
+  //playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
@@ -556,7 +557,7 @@ function showPreviousTrial() {
   }
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
-  playAudio(path.join(exp.mediapath, 'beep.wav'))
+  //playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
