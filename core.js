@@ -19,7 +19,10 @@ var sys = {
   modelID: 'unknown',
   isMacBook: false // need to detect if macbook for ffmpeg recording framerate value
 }
-var instructions = "I'm going to ask you to name some pictures. Each picture will appear on the computer screen. Your job is to name the picture using only one word. We'll practice several pictures before we begin"
+var instructions = ["<h1>I'm going to ask you to name some pictures. <br>" +
+                    "Each picture will appear on the computer screen. <br>" +
+                    "Your job is to name the picture using only one word. <br>" +
+                    "We'll practice several pictures before we begin </h1>"]
 var beepSound = path.join(__dirname, 'assets', 'beep.wav')
 var exp = new experiment('pnt')
 // construct a new ffmpeg recording object
@@ -205,7 +208,7 @@ function ff() {
       ' -preset ultrafast' +
       ' -filter_complex ' + this.filter +
       ' -r ' + this.getFramerate().toString() +
-      ' ' + '"' + this.outputFilename() + '"'
+      ' -movflags +faststart ' + '"' + this.outputFilename() + '"'
     ]
     console.log('ffmpeg cmd: ')
     console.log(cmd)
@@ -285,14 +288,16 @@ function showInstructions(txt) {
   var textDiv = document.createElement("div")
   textDiv.style.textAlign = 'center'
   var p = document.createElement("p")
-  var txtNode = document.createTextNode(txt)
-  p.appendChild(txtNode)
+  // var txtNode = document.createTextNode(txt)
+  // p.appendChild(txtNode)
+  p.innerHTML = txt
   textDiv.appendChild(p)
   var lineBreak = document.createElement("br")
   var btnDiv = document.createElement("div")
   var startBtn = document.createElement("button")
   var startBtnTxt = document.createTextNode("Start")
   startBtn.appendChild(startBtnTxt)
+  startBtn.className = 'startBtn'
   startBtn.onclick = showNextTrial
   btnDiv.appendChild(startBtn)
   content.appendChild(textDiv)
