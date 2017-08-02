@@ -36,7 +36,7 @@ var stimfile = path.resolve(exp.mediapath, 'stim.csv')
 var trials = readCSV(stimfile)
 var maxTrials = trials.length
 var trialTimeoutID
-var t = Number(picNum.value)-1
+var t = Number(picNum.value.trim())-1
 var tReal = t-1
 lowLag.init(); // init audio functions
 var userDataPath = path.join(app.getPath('userData'),'Data')
@@ -61,7 +61,7 @@ ipcRenderer.on('showSpinner', function () {
 
 
 function getSubjID() {
-  var subjID = document.getElementById("subjID").value
+  var subjID = document.getElementById("subjID").value.trim()
   if (subjID === '') {
     subjID = '0'
   }
@@ -69,7 +69,7 @@ function getSubjID() {
 }
 
 function getSessID() {
-  var sessID = document.getElementById("sessID").value
+  var sessID = document.getElementById("sessID").value.trim()
   if (sessID === '') {
     sessID = '0'
   }
@@ -163,7 +163,7 @@ function ff() {
   this.filter = '"[0]scale=iw/8:ih/8 [pip]; [1][pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10"',
   this.isRecording = false,
   this.getSubjID = function() {
-    var subjID = document.getElementById("subjID").value
+    var subjID = document.getElementById("subjID").value.trim()
     if (subjID === '') {
       console.log ('subject is blank')
       alert('Participant field is blank!')
@@ -172,7 +172,7 @@ function ff() {
     return subjID
   },
   this.getSessID = function () {
-    var sessID = document.getElementById("sessID").value
+    var sessID = document.getElementById("sessID").value.trim()
     if (sessID === '') {
       console.log ('session is blank')
       alert('Session field is blank!')
@@ -516,8 +516,8 @@ function checkForEscape() {
 }
 
 function getStarted() {
-  var subjID = document.getElementById("subjID").value
-  var sessID = document.getElementById("sessID").value
+  var subjID = document.getElementById("subjID").value.trim()
+  var sessID = document.getElementById("sessID").value.trim()
   if (subjID === '' || sessID === '') {
     console.log ('subject and/or session is blank')
     alert('Participant field or session field is blank!')
@@ -525,10 +525,10 @@ function getStarted() {
     console.log ('subject is: ', subjID)
     console.log('session is: ', sessID)
     stopWebCamPreview()
-    t = Number(picNum.value)-1
+    t = Number(picNum.value.trim())-1
     tReal = t-1
-    if (Number(picNum.value) > maxTrials+1) {
-      alert("Invalid picture number " + picNum.value )
+    if (Number(picNum.value.trim()) > maxTrials+1) {
+      alert("Invalid picture number " + picNum.value.trim() )
     } else {
       closeNav()
       showInstructions(instructions)
