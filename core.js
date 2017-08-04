@@ -38,7 +38,7 @@ var maxTrials = trials.length
 var trialTimeoutID
 var t = Number(picNum.value.trim())-1
 var tReal = t-1
-lowLag.init(); // init audio functions
+//lowLag.init(); // init audio functions
 var userDataPath = path.join(app.getPath('userData'),'Data')
 makeSureUserDataFolderIsThere()
 var savePath
