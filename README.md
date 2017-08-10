@@ -9,7 +9,7 @@
 ### Description
 The PNT is a 175-item picture naming test developed in the Language and Aphasia Lab of MRRI for the psycholinguistic exploration of lexical access in nonaphasic and aphasic speakers (Roach et al., 1996).
 
-This is a full service app. For clinical reference, please see [the Moss Rehab Research Institute web site] (http://mrri.org/philadelphia-naming-test/). This program was made for use at the [Center for the Study of Aphasia Recovery] (http://cstar.sc.edu/)
+This is a full service app. For clinical reference, please see [the Moss Rehab Research Institute web site](http://mrri.org/philadelphia-naming-test/). This program was made for use at the [Center for the Study of Aphasia Recovery](http://cstar.sc.edu/)
 
 Features:
 
