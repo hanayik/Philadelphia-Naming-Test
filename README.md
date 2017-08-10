@@ -39,6 +39,8 @@ The saved video location will depend on your computer. The program automatically
 
 <img src="./gh-screenshots/3.png" width="300" height=auto />
 
+<img src="./gh-screenshots/4.png" width="300" height=auto />
+
 
 ### Credits
 [Icon](http://www.flaticon.com/authors/madebyoliver)
