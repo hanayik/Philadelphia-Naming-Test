@@ -38,7 +38,7 @@ var maxTrials = trials.length
 var trialTimeoutID
 var t = Number(picNum.value.trim())-1
 var tReal = t-1
-//lowLag.init(); // init audio functions
+lowLag.init({'force':'audioTag'}); // init audio functions
 var userDataPath = path.join(app.getPath('userData'),'Data')
 makeSureUserDataFolderIsThere()
 var savePath
@@ -555,7 +555,7 @@ function showNextTrial() {
   }
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
-  //playAudio(path.join(exp.mediapath, 'beep.wav'))
+  playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
@@ -575,7 +575,7 @@ function showPreviousTrial() {
   }
   var img = document.createElement("img")
   img.src = path.join(exp.mediapath, 'pics', trials[tReal].PictureName.trim() + '.png')
-  //playAudio(path.join(exp.mediapath, 'beep.wav'))
+  playAudio(path.join(exp.mediapath, 'beep.wav'))
   content.appendChild(img)
   trialTimeoutID = setTimeout(showNextTrial, 1000 * timeoutTime)
   return getTime()
